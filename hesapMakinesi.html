@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hesap Makinesi</title>
+        <style>
+            .sayfa{
+                width: 360px;
+                margin: auto;
+            }
+            .sayfa h1{
+                color: hsl(0, 39%, 57%);
+            }
+            table{
+                background: hsl(0, 39%, 57%);
+                border-spacing: 10px;
+                text-align: center;
+            }
+            table .btn{
+                width: 60px;
+                background: rgb(143, 78, 86);
+                text-align: center;
+                line-height: 60px;
+                color: #fff;
+                font-size: 1.5em;
+            }
+            #islem, #hesap{
+                padding: 5px;
+                text-align: right;
+            }
+            #islem{
+                background: hsl(0, 39%, 57%);
+            }
+
+            #hesap{
+                height: 60px;
+                padding: 10px;
+                background: #ddfafa;
+                color: #333;
+                text-align: right;
+                font-size: 1.8em;
+                line-height: 40px;
+                box-sizing: border-box;
+            }
+           
+        </style>
+    </head>
+
+<body>
+    <div class="sayfa">
+        <h1>Hesap Makinesi</h1>
+        <table>
+            <tr>
+                <td colspan="5" id="islem"></td>
+            </tr>
+            <tr>
+                <td colspan="5" id="hesap">0</td>
+            </tr>
+            <tr>
+                <td class="btn btnRakam">7</td>
+                <td class="btn btnRakam">8</td>
+                <td class="btn btnRakam">9</td>
+                <td class="btn btnOpt">/</td>
+                <td class="btn btnCE">CE</td>
+            </tr>
+            <tr>
+                <td class="btn btnRakam">4</td>
+                <td class="btn btnRakam">5</td>
+                <td class="btn btnRakam">6</td>
+                <td class="btn btnOpt">*</td>
+                <td class="btn btnC">C</td>
+            </tr>
+            <tr>
+                <td class="btn btnRakam">1</td>
+                <td class="btn btnRakam">2</td>
+                <td class="btn btnRakam">3</td>
+                <td class="btn btnOpt">-</td>
+                <td rowspan="2" class="btn btnEsit">=</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="btn btnRakam">0</td>
+                <td class="btn btnNokta">.</td>
+                <td class="btn btnOpt">+</td>
+          
+            </tr>
+        </table>
+
+    </div>
+    <script>
+        var optDurum=false, opt="",sonuc=0;
+        //nesnelerin oluşturulması
+        var btnRakam=document.querySelectorAll(".btnRakam"); 
+        var hesap=document.querySelector("#hesap"); 
+        var btnOpt=document.querySelectorAll(".btnOpt"); 
+        var islem=document.querySelector("#islem");
+        var btnC=document.querySelector(".btnC");
+        var btnCE=document.querySelector(".btnCE");
+        var btnEsit=document.querySelector(".btnEsit");
+        var btnNokta=document.querySelector(".btnNokta");
+
+        btnRakam.forEach(function(element){
+            element.onclick=function(e){
+                //baştaki 0degerini kaldırmak için
+                if(hesap.textContent=="0" || optDurum)
+                    hesap.textContent="";
+
+                hesap.textContent+=this.textContent;
+                optDurum=false;
+            }
+
+        });
+
+        btnOpt.forEach(function(element){
+            element.onclick=function(e){
+                optDurum=true;
+                var yeniOpt=this.textContent;
+                //islempaneli
+                islem.textContent=islem.textContent+" "+hesap.textContent+" "+yeniOpt;
+                //sonuc
+                switch(opt){
+                    case "+":hesap.textContent=(sonuc + Number(hesap.textContent));break;
+                    case "-":hesap.textContent=(sonuc - Number(hesap.textContent));break;
+                    case "*":hesap.textContent=(sonuc * Number(hesap.textContent));break;
+                    case "/":hesap.textContent=(sonuc / Number(hesap.textContent));break;
+                default:break;
+                }
+                sonuc=Number(hesap.textContent);
+                opt=yeniOpt;
+            }
+        });
+
+        btnC.onclick=function(e){
+            hesap.textContent="";
+        }
+        btnCE.onclick=function(e){
+            hesap.textContent="";
+            islem.textContent="";
+            sonuc=0;
+            opt="";
+        }
+        btnEsit.onclick=function(e){
+            islem.textContent="";
+            optDurum=true;
+
+            switch(opt){
+                    case "+":hesap.textContent=(sonuc + Number(hesap.textContent));break;
+                    case "-":hesap.textContent=(sonuc - Number(hesap.textContent));break;
+                    case "*":hesap.textContent=(sonuc * Number(hesap.textContent));break;
+                    case "/":hesap.textContent=(sonuc / Number(hesap.textContent));break;
+                default:break;
+                }
+            sonuc=Number(hesap.textContent);
+            hesap.textContent=sonuc;
+            sonuc=0;
+            opt="";
+
+        }
+        btnNokta.onclick=function(e){
+            if(!optDurum && !hesap.textContent.includes(".")){
+                hesap.textContent+=".";
+            }
+            else if(optDurum){
+                hesap.textContent="0";
+            }
+            if(!hesap.textContent.includes(".")){
+                hesap.textContent+=".";
+            }
+            optDurum=false;
+        }
+        
+    </script>
+</body>
+</html>
